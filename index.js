@@ -6,7 +6,7 @@ require("dotenv").config();
 const app = express();
 app.use(bodyParser.json());
 
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT || 4000;
 const token = process.env.WEBHOOK_TOKEN;
 const access_token = process.env.ACCESS_TOKEN;
 
