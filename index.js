@@ -31,10 +31,7 @@ app.get("/webhook", (req, res) => {
 app.post("/webhook", (req, res) => {
   let body = req.body;
 
-  console.log(JSON.stringify(body, null, 2));
-
   if (body.object) {
-    console.log("HELLO, INSIDE BODY");
     if (
       body.entry &&
       body.entry[0].changes &&
@@ -44,9 +41,6 @@ app.post("/webhook", (req, res) => {
       let phoneNoID = body.entry[0].changes[0].value.metadata.phone_number_id;
       let from = body.entry[0].changes[0].value.messages[0].from;
       let msyBody = body.entry[0].changes[0].value.messages[0].text.body;
-
-      console.log("phoneNoID", phoneNoID);
-      console.log("from", from);
 
       axios({
         method: "POST",
