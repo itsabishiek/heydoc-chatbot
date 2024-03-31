@@ -55,7 +55,7 @@ app.post("/webhook", (req, res) => {
           template: {
             name: "heydoc_template",
             language: {
-              code: "en-US",
+              code: "en_US",
             },
           },
         },
