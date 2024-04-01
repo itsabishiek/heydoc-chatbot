@@ -42,7 +42,7 @@ app.post("/webhook", (req, res) => {
       let from = body.entry[0].changes[0].value.messages[0].from;
       let msyBody = body.entry[0].changes[0].value.messages[0].text.body;
 
-      console.log(JSON.stringify(body_param, null, 2));
+      console.log(JSON.stringify(body, null, 2));
       console.log("TYPE", body.type);
       console.log("PAYLOAD", body.payload);
 
