@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const PORT = process.env.PORT || 4000;
 const token = process.env.WEBHOOK_TOKEN;
@@ -43,8 +44,6 @@ app.post("/webhook", (req, res) => {
       let msyBody = body.entry[0].changes[0].value.messages[0].text.body;
 
       console.log(JSON.stringify(body, null, 2));
-      console.log("TYPE", body.type);
-      console.log("PAYLOAD", body.payload);
 
       axios({
         method: "POST",
