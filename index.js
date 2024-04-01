@@ -42,10 +42,10 @@ app.post("/webhook", (req, res) => {
       let phoneNoID = body?.entry[0].changes[0].value.metadata.phone_number_id;
       let from = body?.entry[0].changes[0].value.messages[0].from;
       let msyBody = body?.entry[0].changes[0].value.messages[0].text.body;
-      let payload = body?.entry[0].changes[0].value.messages[0].button.payload;
+      // let payload = body?.entry[0]?.changes[0]?.value?.messages[0]?.button?.payload;
 
-      console.log(JSON.stringify(body, null, 2));
-      console.log("PAYLOAD", payload);
+      // console.log(JSON.stringify(body, null, 2));
+      // console.log("PAYLOAD", payload);
 
       axios({
         method: "POST",
@@ -103,7 +103,7 @@ app.post("/webhook", (req, res) => {
 
       res.sendStatus(200);
     } else {
-      console.log("NO BODY");
+      // console.log("NO BODY");
       res.sendStatus(404);
     }
   }
