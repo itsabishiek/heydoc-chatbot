@@ -61,42 +61,42 @@ app.post("/webhook", (req, res) => {
             language: {
               code: "en_US",
             },
+            components: [
+              {
+                type: "button",
+                sub_type: "quick_reply",
+                index: "0",
+                parameters: [
+                  {
+                    type: "payload",
+                    payload: "emergency_services",
+                  },
+                ],
+              },
+              {
+                type: "button",
+                sub_type: "quick_reply",
+                index: "1",
+                parameters: [
+                  {
+                    type: "payload",
+                    payload: "op_consultation",
+                  },
+                ],
+              },
+              {
+                type: "button",
+                sub_type: "quick_reply",
+                index: "2",
+                parameters: [
+                  {
+                    type: "payload",
+                    payload: "medical_services",
+                  },
+                ],
+              },
+            ],
           },
-          components: [
-            {
-              type: "button",
-              sub_type: "quick_reply",
-              index: "0",
-              parameters: [
-                {
-                  type: "payload",
-                  payload: "emergency_services",
-                },
-              ],
-            },
-            {
-              type: "button",
-              sub_type: "quick_reply",
-              index: "1",
-              parameters: [
-                {
-                  type: "payload",
-                  payload: "op_consultation",
-                },
-              ],
-            },
-            {
-              type: "button",
-              sub_type: "quick_reply",
-              index: "2",
-              parameters: [
-                {
-                  type: "payload",
-                  payload: "medical_services",
-                },
-              ],
-            },
-          ],
         },
       });
 
