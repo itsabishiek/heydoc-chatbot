@@ -101,6 +101,7 @@ app.post("/webhook", (req, res) => {
 
       res.sendStatus(200);
     } else {
+      console.log("NO BODY");
       res.sendStatus(404);
     }
   }
