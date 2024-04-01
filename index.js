@@ -42,41 +42,63 @@ app.post("/webhook", (req, res) => {
       let from = body.entry[0].changes[0].value.messages[0].from;
       let msyBody = body.entry[0].changes[0].value.messages[0].text.body;
 
-      if (msyBody === "Emergency services") {
-        axios({
-          method: "POST",
-          url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          data: {
-            messaging_product: "whatsapp",
-            to: from,
-            text: {
-              body: `Here is the link for ${msyBody}`,
+      console.log(JSON.stringify(body_param, null, 2));
+      console.log("TYPE", body.type);
+      console.log("PAYLOAD", body.payload);
+
+      axios({
+        method: "POST",
+        url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          messaging_product: "whatsapp",
+          to: from,
+          type: "template",
+          template: {
+            name: "heydoc_template",
+            language: {
+              code: "en_US",
             },
           },
-        });
-      } else {
-        axios({
-          method: "POST",
-          url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          data: {
-            messaging_product: "whatsapp",
-            to: from,
-            type: "template",
-            template: {
-              name: "heydoc_template",
-              language: {
-                code: "en_US",
-              },
+          components: [
+            {
+              type: "button",
+              sub_type: "quick_reply",
+              index: "0",
+              parameters: [
+                {
+                  type: "payload",
+                  payload: "emergency_services",
+                },
+              ],
             },
-          },
-        });
-      }
+            {
+              type: "button",
+              sub_type: "quick_reply",
+              index: "1",
+              parameters: [
+                {
+                  type: "payload",
+                  payload: "op_consultation",
+                },
+              ],
+            },
+            {
+              type: "button",
+              sub_type: "quick_reply",
+              index: "2",
+              parameters: [
+                {
+                  type: "payload",
+                  payload: "medical_services",
+                },
+              ],
+            },
+          ],
+        },
+      });
 
       res.sendStatus(200);
     } else {
