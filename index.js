@@ -30,20 +30,22 @@ app.get("/webhook", (req, res) => {
 });
 
 app.post("/webhook", (req, res) => {
-  let body = req.body;
+  let body = req?.body;
 
-  if (body.object) {
+  if (body?.object) {
     if (
-      body.entry &&
-      body.entry[0].changes &&
-      body.entry[0].changes[0].value.messages &&
-      body.entry[0].changes[0].value.messages[0]
+      body?.entry &&
+      body?.entry[0].changes &&
+      body?.entry[0].changes[0].value.messages &&
+      body?.entry[0].changes[0].value.messages[0]
     ) {
-      let phoneNoID = body.entry[0].changes[0].value.metadata.phone_number_id;
-      let from = body.entry[0].changes[0].value.messages[0].from;
-      let msyBody = body.entry[0].changes[0].value.messages[0].text.body;
+      let phoneNoID = body?.entry[0].changes[0].value.metadata.phone_number_id;
+      let from = body?.entry[0].changes[0].value.messages[0].from;
+      let msyBody = body?.entry[0].changes[0].value.messages[0].text.body;
+      let payload = body?.entry[0].changes[0].value.messages[0].button.payload;
 
       console.log(JSON.stringify(body, null, 2));
+      console.log("PAYLOAD", payload);
 
       axios({
         method: "POST",
