@@ -41,6 +41,7 @@ app.post("/webhook", (req, res) => {
       body?.entry[0].changes[0].value.messages[0]
     ) {
       let phoneNoID = body?.entry[0].changes[0].value.metadata.phone_number_id;
+      let name = body?.entry[0].changes[0].value.contacts[0].profile.name;
       let from = body?.entry[0].changes[0].value.messages[0].from;
       let msyBody = body?.entry[0].changes[0].value.messages[0].text.body;
       // let payload = body?.entry[0]?.changes[0]?.value?.messages[0]?.button?.payload;
@@ -64,6 +65,15 @@ app.post("/webhook", (req, res) => {
               code: "en_US",
             },
             components: [
+              {
+                type: "body",
+                parameters: [
+                  {
+                    type: "text",
+                    text: name,
+                  },
+                ],
+              },
               {
                 type: "button",
                 sub_type: "quick_reply",
