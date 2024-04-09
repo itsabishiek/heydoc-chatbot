@@ -43,11 +43,76 @@ app.post("/webhook", (req, res) => {
       let phoneNoID = body?.entry[0].changes[0].value.metadata.phone_number_id;
       let name = body?.entry[0].changes[0].value.contacts[0].profile.name;
       let from = body?.entry[0].changes[0].value.messages[0].from;
-      let msyBody = body?.entry[0].changes[0].value.messages[0].text.body;
-      // let payload = body?.entry[0]?.changes[0]?.value?.messages[0]?.button?.payload;
+      let payload =
+        body?.entry[0]?.changes[0]?.value?.messages[0]?.button?.payload;
 
       console.log(JSON.stringify(body, null, 2));
-      // console.log("PAYLOAD", payload);
+
+      if (payload !== undefined) {
+        switch (payload) {
+          case "emergency_services":
+            // Handle Emergency services
+            axios({
+              method: "POST",
+              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: {
+                messaging_product: "whatsapp",
+                to: from,
+                text: {
+                  body: "Use this link to connect to nearby doctors: https://call.whatsapp.com/video/VFwExVrL7596r9JmOCho7w",
+                },
+              },
+            });
+
+            res.sendStatus(200);
+            break;
+          case "op_consultation":
+            // Handle OP Consultation
+            axios({
+              method: "POST",
+              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: {
+                messaging_product: "whatsapp",
+                to: from,
+                text: {
+                  body: "Here is your OP Consultation link...",
+                },
+              },
+            });
+
+            res.sendStatus(200);
+            break;
+          case "medical_services":
+            // Handle Medical services
+            axios({
+              method: "POST",
+              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: {
+                messaging_product: "whatsapp",
+                to: from,
+                text: {
+                  body: "Here is your Medical Services link...",
+                },
+              },
+            });
+
+            res.sendStatus(200);
+            break;
+          default:
+            break;
+        }
+
+        return;
+      }
 
       axios({
         method: "POST",
