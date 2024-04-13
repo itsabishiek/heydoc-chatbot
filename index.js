@@ -1,8 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const axios = require("axios");
-require("dotenv").config();
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import axios from "axios";
+import dotenv from "dotenv";
+import { getLocationDetails } from "./map.js";
+
+dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
@@ -46,7 +49,7 @@ app.post("/webhook", (req, res) => {
       let payload =
         body?.entry[0]?.changes[0]?.value?.messages[0]?.button?.payload;
 
-      console.log(JSON.stringify(body, null, 2));
+      // console.log(JSON.stringify(body, null, 2));
 
       if (payload !== undefined) {
         switch (payload) {
@@ -80,8 +83,47 @@ app.post("/webhook", (req, res) => {
               data: {
                 messaging_product: "whatsapp",
                 to: from,
-                text: {
-                  body: "Here is your OP Consultation link...",
+                type: "template",
+                template: {
+                  name: "op_template",
+                  language: {
+                    code: "en_US",
+                  },
+                  components: [
+                    {
+                      type: "button",
+                      sub_type: "quick_reply",
+                      index: "0",
+                      parameters: [
+                        {
+                          type: "payload",
+                          payload: "op_general",
+                        },
+                      ],
+                    },
+                    {
+                      type: "button",
+                      sub_type: "quick_reply",
+                      index: "1",
+                      parameters: [
+                        {
+                          type: "payload",
+                          payload: "op_pediatrician",
+                        },
+                      ],
+                    },
+                    {
+                      type: "button",
+                      sub_type: "quick_reply",
+                      index: "2",
+                      parameters: [
+                        {
+                          type: "payload",
+                          payload: "op_specialist",
+                        },
+                      ],
+                    },
+                  ],
                 },
               },
             });
@@ -114,70 +156,102 @@ app.post("/webhook", (req, res) => {
         return;
       }
 
-      axios({
-        method: "POST",
-        url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: {
-          messaging_product: "whatsapp",
-          to: from,
-          type: "template",
-          template: {
-            name: "heydoc_template",
-            language: {
-              code: "en_US",
-            },
-            components: [
-              {
-                type: "body",
-                parameters: [
-                  {
-                    type: "text",
-                    text: name,
-                  },
-                ],
-              },
-              {
-                type: "button",
-                sub_type: "quick_reply",
-                index: "0",
-                parameters: [
-                  {
-                    type: "payload",
-                    payload: "emergency_services",
-                  },
-                ],
-              },
-              {
-                type: "button",
-                sub_type: "quick_reply",
-                index: "1",
-                parameters: [
-                  {
-                    type: "payload",
-                    payload: "op_consultation",
-                  },
-                ],
-              },
-              {
-                type: "button",
-                sub_type: "quick_reply",
-                index: "2",
-                parameters: [
-                  {
-                    type: "payload",
-                    payload: "medical_services",
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      });
+      if (body?.entry[0].changes[0].value.messages[0].type === "location") {
+        let latitude =
+          body?.entry[0].changes[0].value.messages[0].location.latitude;
+        let longitude =
+          body?.entry[0].changes[0].value.messages[0].location.longitude;
 
-      res.sendStatus(200);
+        getLocationDetails(latitude, longitude)
+          .then((location) => {
+            axios({
+              method: "POST",
+              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: {
+                messaging_product: "whatsapp",
+                to: from,
+                text: {
+                  body: `Your location is near ${location}`,
+                },
+              },
+            });
+
+            res.sendStatus(200);
+          })
+          .catch((error) => {
+            console.error("Error:", error.message);
+          });
+      }
+
+      if (body?.entry[0].changes[0].value.messages[0].type === "text") {
+        axios({
+          method: "POST",
+          url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: {
+            messaging_product: "whatsapp",
+            to: from,
+            type: "template",
+            template: {
+              name: "heydoc_template",
+              language: {
+                code: "en_US",
+              },
+              components: [
+                {
+                  type: "body",
+                  parameters: [
+                    {
+                      type: "text",
+                      text: name,
+                    },
+                  ],
+                },
+                {
+                  type: "button",
+                  sub_type: "quick_reply",
+                  index: "0",
+                  parameters: [
+                    {
+                      type: "payload",
+                      payload: "emergency_services",
+                    },
+                  ],
+                },
+                {
+                  type: "button",
+                  sub_type: "quick_reply",
+                  index: "1",
+                  parameters: [
+                    {
+                      type: "payload",
+                      payload: "op_consultation",
+                    },
+                  ],
+                },
+                {
+                  type: "button",
+                  sub_type: "quick_reply",
+                  index: "2",
+                  parameters: [
+                    {
+                      type: "payload",
+                      payload: "medical_services",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        });
+
+        res.sendStatus(200);
+      }
     } else {
       // console.log("NO BODY");
       res.sendStatus(404);
