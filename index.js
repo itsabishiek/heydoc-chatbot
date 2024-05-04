@@ -3,7 +3,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import axios from "axios";
 import dotenv from "dotenv";
-import { getLocationDetails } from "./map.js";
+import { getLocationDetails } from "./utils/map.js";
+import { GENERAL, PEDIATRICIAN, SPECIALIST } from "./constants/index.js";
+import { extractDoctorName } from "./utils/index.js";
 
 dotenv.config();
 
@@ -49,7 +51,7 @@ app.post("/webhook", (req, res) => {
       let payload =
         body?.entry[0]?.changes[0]?.value?.messages[0]?.button?.payload;
 
-      // console.log(JSON.stringify(body, null, 2));
+      console.log(JSON.stringify(body, null, 2));
 
       if (payload !== undefined) {
         switch (payload) {
@@ -130,8 +132,8 @@ app.post("/webhook", (req, res) => {
 
             res.sendStatus(200);
             break;
-          case "medical_services":
-            // Handle Medical services
+          case "op_general":
+            // Handle Op General option
             axios({
               method: "POST",
               url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
@@ -142,7 +144,76 @@ app.post("/webhook", (req, res) => {
                 messaging_product: "whatsapp",
                 to: from,
                 text: {
-                  body: "Here is your Medical Services link...",
+                  body: `
+                    Here are the list of doctors nearby,\n ${extractDoctorName(
+                      GENERAL
+                    )}\n Choose the doctor by providing the serial no.(eg: 1)
+                  `,
+                },
+              },
+            });
+
+            res.sendStatus(200);
+            break;
+          case "op_pediatrician":
+            // Handle Op General option
+            axios({
+              method: "POST",
+              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: {
+                messaging_product: "whatsapp",
+                to: from,
+                text: {
+                  body: `
+                    Here are the list of doctors nearby,\n ${extractDoctorName(
+                      PEDIATRICIAN
+                    )}\n Choose the doctor by providing the serial no.(eg: 1)
+                  `,
+                },
+              },
+            });
+
+            res.sendStatus(200);
+            break;
+          case "op_specialist":
+            // Handle Op General option
+            axios({
+              method: "POST",
+              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: {
+                messaging_product: "whatsapp",
+                to: from,
+                text: {
+                  body: `
+                    Here are the list of doctors nearby,\n ${extractDoctorName(
+                      SPECIALIST
+                    )}\n Choose the doctor by providing the serial no.(eg: 1)
+                  `,
+                },
+              },
+            });
+
+            res.sendStatus(200);
+            break;
+          case "ambulance_services":
+            // Handle Ambulance services
+            axios({
+              method: "POST",
+              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              data: {
+                messaging_product: "whatsapp",
+                to: from,
+                text: {
+                  body: "Here is your Ambulance Services link...",
                 },
               },
             });
@@ -241,7 +312,7 @@ app.post("/webhook", (req, res) => {
                   parameters: [
                     {
                       type: "payload",
-                      payload: "medical_services",
+                      payload: "ambulance_services",
                     },
                   ],
                 },
