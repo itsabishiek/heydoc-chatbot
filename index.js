@@ -4,7 +4,12 @@ import cors from "cors";
 import axios from "axios";
 import dotenv from "dotenv";
 import { getLocationDetails } from "./utils/map.js";
-import { GENERAL, PEDIATRICIAN, SPECIALIST } from "./constants/index.js";
+import {
+  API_VERSION,
+  GENERAL,
+  PEDIATRICIAN,
+  SPECIALIST,
+} from "./constants/index.js";
 import { extractDoctorName } from "./utils/index.js";
 
 dotenv.config();
@@ -59,7 +64,7 @@ app.post("/webhook", (req, res) => {
             // Handle Emergency services
             axios({
               method: "POST",
-              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
               headers: {
                 "Content-Type": "application/json",
               },
@@ -78,7 +83,7 @@ app.post("/webhook", (req, res) => {
             // Handle OP Consultation
             axios({
               method: "POST",
-              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
               headers: {
                 "Content-Type": "application/json",
               },
@@ -136,7 +141,7 @@ app.post("/webhook", (req, res) => {
             // Handle Op General option
             axios({
               method: "POST",
-              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
               headers: {
                 "Content-Type": "application/json",
               },
@@ -159,7 +164,7 @@ app.post("/webhook", (req, res) => {
             // Handle Op General option
             axios({
               method: "POST",
-              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
               headers: {
                 "Content-Type": "application/json",
               },
@@ -182,7 +187,7 @@ app.post("/webhook", (req, res) => {
             // Handle Op General option
             axios({
               method: "POST",
-              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
               headers: {
                 "Content-Type": "application/json",
               },
@@ -205,7 +210,7 @@ app.post("/webhook", (req, res) => {
             // Handle Ambulance services
             axios({
               method: "POST",
-              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
               headers: {
                 "Content-Type": "application/json",
               },
@@ -237,7 +242,7 @@ app.post("/webhook", (req, res) => {
           .then((location) => {
             axios({
               method: "POST",
-              url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+              url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
               headers: {
                 "Content-Type": "application/json",
               },
@@ -260,7 +265,7 @@ app.post("/webhook", (req, res) => {
       if (body?.entry[0].changes[0].value.messages[0].type === "text") {
         axios({
           method: "POST",
-          url: `https://graph.facebook.com/v18.0/${phoneNoID}/messages?access_token=${access_token}`,
+          url: `https://graph.facebook.com/${API_VERSION}/${phoneNoID}/messages?access_token=${access_token}`,
           headers: {
             "Content-Type": "application/json",
           },

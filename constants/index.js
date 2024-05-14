@@ -1,3 +1,5 @@
+export const API_VERSION = "v19.0";
+
 export const GENERAL = [
   {
     doctorName: "Dr. Sagunthala Devi",
