@@ -234,20 +234,11 @@ export const postWebhook = async (req, res) => {
             to: from,
             type: "template",
             template: {
-              name: "heydoc_temp",
+              name: "welcome_template",
               language: {
                 code: "en_US",
               },
               components: [
-                {
-                  type: "body",
-                  parameters: [
-                    {
-                      type: "text",
-                      text: name,
-                    },
-                  ],
-                },
                 {
                   type: "button",
                   sub_type: "quick_reply",
